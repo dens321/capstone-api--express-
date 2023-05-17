@@ -7,7 +7,7 @@ const getAllUsers = (req, res) => {
             res.status(500).send({
                 message: err.message || "Some error occurred"
             });
-        } else res.send(data);
+        } else res.status(200).send(data);
     })
 }
 
@@ -24,7 +24,7 @@ const createNewUser = (req, res) => {
                 message: err.message || "some error occurred"
             });
         } else{
-            res.send(data);
+            res.status(201).send(data);
         };
     })
 }
