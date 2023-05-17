@@ -31,5 +31,7 @@ User.createUser = (newUser, result) => {
     });
 };
 
+User.updateUser
+
 
 module.exports = User;
