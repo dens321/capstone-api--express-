@@ -11,6 +11,22 @@ const getAllUsers = (req, res) => {
     })
 }
 
+const getUserByUsername = (req, res) => {
+    User.findByUsername(req.params.username, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found user with username: ${req.params.username}.`
+                })
+            } else{
+                res.status(500).send({
+                    message: "Error retrieving user with username: " + req.params.username
+                });
+            }
+        } else res.status(200).send(data);
+    })
+}
+
 const createNewUser = (req, res) => {
     // const newUser = req.body;
     // const newUser = {username, password};
@@ -40,4 +56,4 @@ const deleteUser = (req, res) => {
     res.json({"id": req.body.id});
 }
 
-module.exports = {getAllUsers, createNewUser, updateUser, deleteUser}
+module.exports = {getAllUsers, createNewUser, updateUser, deleteUser, getUserByUsername}
