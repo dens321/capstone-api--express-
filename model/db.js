@@ -1,12 +1,8 @@
 const mysql = require('mysql');
+const dbConfig = require('../config/dbConfig');
 
 // create a connection to db
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'capstone'
-})
+const db = mysql.createConnection(dbConfig)
 
 // open the connection
 db.connect(error => {

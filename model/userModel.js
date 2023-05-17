@@ -5,7 +5,7 @@ const User = function (user) {
     this.password = user.password;
 };
 
-User.getAll = function (result) {
+User.getAll = (result) => {
     let query = "SELECT * FROM users";
 
     db.query(query, (err, res) => {
@@ -19,5 +19,17 @@ User.getAll = function (result) {
     });
 };
 
+User.createUser = (newUser, result) => {
+    db.query("INSERT INTO users SET ?", newUser, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        console.log("created user: ", {id: res.insertId, ...newUser});
+        result(null, { id: res.insertId, ...newUser});
+    });
+};
 
-module.exports = {User}
+
+module.exports = User;
