@@ -6,7 +6,7 @@ const User = function (user) {
 };
 
 User.getAll = (result) => {
-    let query = "SELECT * FROM users";
+    let query = "SELECT username FROM users";
 
     db.query(query, (err, res) => {
         if(err) {
@@ -26,13 +26,13 @@ User.createUser = (newUser, result) => {
             result(err, null);
             return;
         }
-        console.log("created user: ", {id: res.insertId, ...newUser});
+        console.log("created user: ", {...newUser});
         result(null, { id: res.insertId, ...newUser});
     });
 };
 
 User.findByUsername = (username, result) => {
-    db.query(`SELECT * FROM users WHERE username='${username}'`, (err, res) => {
+    db.query(`SELECT username FROM users WHERE username='${username}'`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -49,7 +49,23 @@ User.findByUsername = (username, result) => {
     })
 }
 
-// User.updateUser = (newUser, result)
+User.updateUser = (username, newUser, result) => {
+    db.query("UPDATE users SET username = ?, password = ? WHERE username = ?", [newUser.username, newUser.password, username], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+
+        if (res.affectedRows == 0) {
+            result({ kind: "not_found" }, null);
+            return;
+        }
+
+        console.log("updated tutorial: ", { username: username, ...newUser});
+        result(null, { username: username, ...newUser});
+    });
+};
 
 
 module.exports = User;

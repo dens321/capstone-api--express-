@@ -12,24 +12,33 @@ const getAllUsers = (req, res) => {
 }
 
 const getUserByUsername = (req, res) => {
-    User.findByUsername(req.params.username, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `Not found user with username: ${req.params.username}.`
-                })
-            } else{
+    if(!req.body.username){
+        User.getAll((err, data) => {
+            if (err) {
                 res.status(500).send({
-                    message: "Error retrieving user with username: " + req.params.username
+                    message: err.message || "Some error occurred"
                 });
-            }
-        } else res.status(200).send(data);
-    })
+            } else res.status(200).send(data);
+        })
+    }
+    else {
+        User.findByUsername(req.body.username, (err, data) => {
+            if (err) {
+                if (err.kind === "not_found") {
+                    res.status(404).send({
+                        message: `Not found user with username: ${req.body.username}.`
+                    })
+                } else{
+                    res.status(500).send({
+                        message: "Error retrieving user with username: " + req.body.username
+                    });
+                }
+            } else res.status(200).send(data);
+        })
+    }
 }
 
 const createNewUser = (req, res) => {
-    // const newUser = req.body;
-    // const newUser = {username, password};
     const newUser = new User({
         username: req.body.username,
         password: req.body.password
@@ -46,10 +55,12 @@ const createNewUser = (req, res) => {
 }
 
 const updateUser = (req, res) => {
-    res.json({
-        "username": req.body.username,
-        "password": req.body.password
-    });
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+    }
+    User.updateUser(req.body.username);
 }
 
 const deleteUser = (req, res) => {
