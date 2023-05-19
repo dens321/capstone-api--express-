@@ -1,7 +1,7 @@
 const dbConfig = {
-    host: 'localhost',
+    host: '34.101.85.1',
     user: 'root',
-    password: '',
+    password: 'LungCare123',
     database: 'capstone'
 }
 
