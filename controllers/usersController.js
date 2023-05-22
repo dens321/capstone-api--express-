@@ -12,7 +12,7 @@ const getAllUsers = (req, res) => {
 }
 
 const getUserByUsername = (req, res) => {
-    User.findByUsername(req.body.username, (err, data) => {
+    User.findByUsername(req.params.username, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -23,7 +23,10 @@ const getUserByUsername = (req, res) => {
                     message: "Error retrieving user with username: " + req.body.username
                 });
             }
-        } else res.status(200).send(data);
+        } else res.status(200).send({
+            message: "user found!",
+            data
+        });
     })
 }
 
@@ -38,7 +41,9 @@ const createNewUser = (req, res) => {
                 message: err.message || "some error occurred"
             });
         } else{
-            res.status(201).send(data);
+            res.status(201).send({
+                message: "user created successfully"
+            });
         };
     })
 }
@@ -49,7 +54,23 @@ const updateUser = (req, res) => {
             message: "Content can not be empty!"
         });
     }
-    User.updateUser(req.body.username);
+
+    const newUser = new User({
+        username: req.body.username,
+        password: req.body.password
+    })
+
+    User.updateUser(req.params.username, newUser, (err, data) => {
+        if (err) {
+            res.status(500).send({
+                message: err.message || "some error occured" 
+            });
+        } else{
+            res.status(200).send({
+                message: "data updated successfully"
+            });
+        }
+    });
 }
 
 const deleteUser = (req, res) => {
