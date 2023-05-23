@@ -31,22 +31,21 @@ User.createUser = (newUser, result) => {
     });
 };
 
-User.findByUsername = (username, result) => {
-    db.query(`SELECT username FROM users WHERE username='${username}'`, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
+User.findByUsername = (username) => {
+    return new Promise((resolve, reject)=>{
+        db.query(`SELECT username FROM users WHERE username='${username}'`, (err, res) => {
+            if (err) {
+                return reject(err);
+            }
+            if (res.length) {
+                console.log("found user: ", res[0]);
+                return resolve({kind: 'found'});
+            }
 
-        if (res.length) {
-            console.log("found user: ", res[0]);
-            result(null, res[0]);
-            return;
-        }
-
-        result({ kind: 'not_found'}, null);
+            return resolve({ kind: 'not_found'});
+        })
     })
+    
 }
 
 User.updateUser = (username, newUser, result) => {
