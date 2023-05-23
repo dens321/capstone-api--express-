@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // routes
 app.use('/register', require('./routes/register'));
-// app.use('/login', require('./routes/login'));
+app.use('/login', require('./routes/login'));
 
 app.all('*', (req, res) => {
     res.status(404).send('Resource not found')

@@ -41,7 +41,6 @@ User.findByUsername = (username) => {
                 console.log("found user: ", res[0]);
                 return resolve({kind: 'found', username: res[0].username, password: res[0].password});
             }
-
             return resolve({kind: 'not_found'});
         })
     })
