@@ -1,6 +1,6 @@
 const User = require('../model/userModel.js');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const handleNewUser = async( req, res) => {
     const { username, password } = req.body;
@@ -14,8 +14,9 @@ const handleNewUser = async( req, res) => {
     }
     else if(duplicate.kind === 'not_found'){
         try{
-            // const hashedPwd = await bcrypt.hash(password, 10);
-            const newUser = { "username": username, "password": password };
+            //hashing password
+            const hashedPwd = await bcrypt.hash(password, 10)
+            const newUser = { "username": username, "password": hashedPwd };
             User.createUser(newUser, (err, data) => {
                 if (err) {
                     res.status(500).send({

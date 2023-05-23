@@ -33,16 +33,16 @@ User.createUser = (newUser, result) => {
 
 User.findByUsername = (username) => {
     return new Promise((resolve, reject)=>{
-        db.query(`SELECT username FROM users WHERE username='${username}'`, (err, res) => {
+        db.query(`SELECT * FROM users WHERE username='${username}'`, (err, res) => {
             if (err) {
                 return reject(err);
             }
             if (res.length) {
                 console.log("found user: ", res[0]);
-                return resolve({kind: 'found'});
+                return resolve({kind: 'found', username: res[0].username, password: res[0].password});
             }
 
-            return resolve({ kind: 'not_found'});
+            return resolve({kind: 'not_found'});
         })
     })
     
