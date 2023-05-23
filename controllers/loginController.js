@@ -11,7 +11,6 @@ const handleLogin = async(req, res) => {
         if(!username || !password) return res.status(400).json({
             'message': 'Username and password are required.'
         });
-
         const foundUser = await User.findByUsername(username);
         if(foundUser.kind === 'found' && (await bcrypt.compare(password, foundUser.password))){
             const token = jwt.sign(
